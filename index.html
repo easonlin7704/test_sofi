@@ -3,331 +3,507 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoFi 對台灣金融業的啟示 - 數據儀表板</title>
+    <title>SoFi 戰略深度解析 - 台灣金融業洞見</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     
-    <!-- Chosen Palette: Dark Navy/Electric Cyan/White (Tech Dashboard Theme - High Contrast) --><!-- Application Structure Plan: 採用高對比度的儀表板結構。在「核心技術特殊之處」的大表格中，為每行添加淺淺的水平分隔線，提升閱讀清晰度。維持 FSPL 的 Tab 切換互動模式，以及導航欄和圖表切換的互動效果。 --><!-- Visualization & Content Choices:
-        - 報告資訊 (核心技術) -> 目標: 清楚對比 SoFi 對傳統金融的優勢 -> 視覺化: 單一、結構化的大型比較表格，使用內部標題區分三大支柱，並在**每行之間加入淺色水平分隔線** -> 理由: 視覺上整齊，格線防止內容擁擠，水平線進一步提升行閱讀清晰度 -> 方法: HTML/Tailwind.
-        - 報告資訊 (FSPL) -> 目標: 解釋 SoFi 成功的前提，並提供階段性細節 -> 視覺化: 靜態流程圖 + 下方四個可點擊選項卡 (Tabs) -> 理由: 互動提示清晰，符合儀表板邏輯 -> 方法: HTML/Tailwind/JS.
-        - 報告資訊 (營運圖表) -> 目標: 提供數據佐證 -> 視覺化: 線圖/圓餅圖 (Chart.js)，切換按鈕高對比度 -> 理由: 數據支持論點，按鈕易用性高 -> 方法: Chart.js/JS.
-    --><!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. --><style>
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            scroll-behavior: smooth;
-            background-color: #0F172A; /* Deeper Navy Blue */
-            color: #E5E7EB; /* Light Text */
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 650px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 400px;
-            max-height: 450px;
-            background-color: #FFFFFF; /* Chart background must be white */
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.1); /* Subtle Cyan Shadow */
-        }
-        /* -- INTERACTIVE ELEMENTS ENHANCEMENT -- */
-        .nav-link {
-            @apply px-4 py-2 text-sm font-medium text-gray-300 rounded-full hover:bg-gray-700 hover:text-cyan-400 transition-colors whitespace-nowrap cursor-pointer;
-        }
-        .nav-link.active {
-            @apply bg-cyan-600 text-white shadow-xl shadow-cyan-400/50; /* 強烈 active 視覺 */
-        }
-        .fspl-tab-btn {
-            /* FSPL Tab 按鈕樣式，比照圖表切換 */
-            @apply px-6 py-2 rounded-lg font-bold transition-all duration-300 cursor-pointer text-sm md:text-base;
-        }
-        .fspl-tab-btn:not(.active) {
-            @apply bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-cyan-300;
-        }
-        .fspl-tab-btn.active {
-            @apply bg-cyan-600 text-white shadow-lg shadow-cyan-400/50 transform scale-[1.03];
-        }
-        .chart-toggle-btn {
-            /* 圖表切換按鈕：明顯的區別與點擊回饋 */
-            @apply px-6 py-2 rounded-lg font-bold transition-all duration-300 cursor-pointer;
-        }
-        .chart-toggle-btn:not(.active) {
-            @apply bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-cyan-300;
-        }
-        .chart-toggle-btn.active {
-            @apply bg-cyan-600 text-white shadow-lg shadow-cyan-400/50 transform scale-[1.03];
-        }
-        /* -- END INTERACTIVE ELEMENTS ENHANCEMENT -- */
+    <!-- Chosen Palette: Midnight Blue / Electric Cyan / White (Professional FinTech Dashboard) -->
+    <!-- Application Structure Plan: 最終專業級審核優化 (總經理視角)。核心結構：戰略威脅 > 護城河分析 (NIM/Galileo) > FSPL (盈利模式) > 台灣戰略啟示 > 風險與包袱。 -->
+    <!-- Visualization & Content Choices:
+        - 核心技術表格：整合為單一超級表格，使用極簡格線和高對比文字。
+        - FSPL：互動流程圖直接高亮步驟並切換下方內容。
+        - 數據佐證：Chart.js 圖表，可切換查看會員、收入和產品採用率。
+        - 新增：公司歷程時間軸、FSPL 單元經濟學 KPI、戰略威脅備忘錄。
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
-        .section-title {
-            @apply text-4xl font-black text-cyan-400 text-center mb-6;
-        }
-        .section-intro {
-            @apply text-center text-gray-400 max-w-4xl mx-auto mb-12;
-        }
-        .card {
-            @apply bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700 transition-transform duration-300;
+    <style>
+        /* BASE & TYPOGRAPHY */
+        body {
+            font-family: 'Noto+Sans+TC', 'Noto Sans TC', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #080C16;
+            color: #E5E7EB;
         }
         
-        /* 單一總結表格樣式 */
-        .super-table-container {
-            @apply card bg-gray-900 border-cyan-600/50 p-0 overflow-x-auto;
+        /* FONT HIERARCHY - 專業比例 */
+        /* H2: Section Title - 最高優先級 (總經理視角) */
+        .section-title {
+            @apply text-4xl sm:text-6xl font-black text-cyan-400 mb-4 leading-tight; 
+            text-shadow: 0 0 15px rgba(6, 182, 212, 0.6); 
         }
-        .super-table {
-            @apply w-full text-sm mt-4 border-collapse;
-            min-width: 800px; /* 確保在小螢幕下可水平滾動 */
+        
+        /* H3: Sub-Section Title - 次要標題 */
+        .sub-section-title {
+            @apply text-2xl sm:text-4xl font-bold text-gray-200 mb-8 sm:mb-10 mt-12 sm:mt-20;
         }
-        .super-table th, .super-table td {
-            @apply p-4 text-sm border-l border-r border-gray-700 align-top; /* 只保留左右垂直邊框 */
+        /* H4: Card Title - 第三階層 */
+        .card-title {
+            @apply text-xl sm:text-2xl font-bold mb-3; 
         }
-        /* 為每行添加淺淺的水平線 */
-        .super-table tr:not(:last-child) { /* 除了最後一行，都加上底部邊框 */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* 淺白色，透明度 */
+        
+        /* 總結區塊的 H3 (conclusion-title) */
+        .conclusion-title {
+            @apply text-3xl sm:text-5xl font-black text-white !mt-0 !mb-4 leading-tight; 
         }
-        .super-table th {
-            @apply text-cyan-400 text-left font-extrabold bg-gray-800/70 border-b-2 border-cyan-600; /* 表頭底部有更深的線 */
+        .conclusion-text {
+            @apply text-base sm:text-xl;
         }
-        .super-table .category-header {
-            @apply bg-gray-700 text-cyan-300 font-bold text-base text-center border-t border-b border-gray-600; /* 分類行有上下邊框 */
-        }
-        .super-table .feature-title {
-            @apply font-semibold text-gray-200;
-        }
-        .super-table .traditional-data {
-            @apply font-normal text-gray-400;
-        }
-        .super-table .sofi-optimization {
-            @apply font-bold text-green-400;
-        }
-        .super-table tr:hover {
-            @apply bg-gray-800/50;
+        
+        /* 強調文字的樣式 (取代 Markdown) */
+        .highlight {
+            @apply font-bold text-cyan-300;
         }
 
-        .analysis-card {
-            @apply bg-gray-800 p-6 rounded-xl shadow-2xl border-l-4 border-gray-600;
+
+        /* LAYOUT & ALIGNMENT */
+        .section-intro {
+            @apply text-gray-400 max-w-4xl mx-auto mb-16 px-2 text-base sm:text-lg; 
         }
-        .challenge {
-            @apply border-l-4 border-red-500;
+        /* 優化: H2 下方的 Section Intro 往上拉近 */
+        .centered-content .section-intro:first-of-type,
+        .left-aligned-content .section-intro:first-of-type {
+            @apply mt-2 mb-16;
         }
-        .learning {
-            @apply border-l-4 border-green-500;
+        
+        .centered-content .section-title, .centered-content .sub-section-title, .centered-content .section-intro {
+            @apply text-center;
         }
+        .left-aligned-content .section-title, .left-aligned-content .section-intro, .left-aligned-content .sub-section-title {
+            @apply text-left;
+        }
+
+        /* FSPL 流程圖步驟樣式 (極簡 + 焦點突顯) */
+        .fspl-step {
+            @apply w-full md:w-56 p-4 text-center bg-gray-800/50 rounded-xl border border-gray-700 transition-all duration-300 cursor-pointer;
+        }
+        .fspl-step h5 {
+            @apply text-white transition-colors duration-300 font-black text-lg;
+        }
+        .fspl-step p {
+            @apply text-gray-400 transition-colors duration-300 text-xs;
+        }
+        .fspl-step:hover {
+            @apply bg-gray-800 border-cyan-500 shadow-md shadow-cyan-500/10;
+        }
+        /* Active 狀態：亮青色文字 + 外框 + 陰影 */
+        .fspl-step.active {
+            @apply bg-gray-900/50 border-cyan-400 scale-[1.05] relative z-10; 
+            box-shadow: 0 0 0 3px #06b6d4, 0 25px 50px -12px rgba(6, 182, 212, 0.5);
+        }
+        .fspl-step.active h5 {
+            @apply text-cyan-400;
+        }
+        .fspl-step.active p {
+            @apply text-cyan-300;
+        }
+        
+        /* 圖表切換按鈕樣式 (比照 FSPL 步驟) */
+        .chart-toggle-btn {
+            @apply w-full md:w-56 p-4 text-center bg-gray-800/50 rounded-xl border border-gray-700 transition-all duration-300 cursor-pointer;
+            @apply text-white font-black text-lg; /* 模擬 h5 */
+        }
+        .chart-toggle-btn p {
+             @apply text-gray-400 transition-colors duration-300 text-xs; /* 模擬 p */
+        }
+        .chart-toggle-btn:hover {
+            @apply bg-gray-800 border-cyan-500 shadow-md shadow-cyan-500/10;
+        }
+        .chart-toggle-btn.active {
+            @apply bg-gray-900/50 border-cyan-400 scale-[1.05] relative z-10; 
+            box-shadow: 0 0 0 3px #06b6d4, 0 25px 50px -12px rgba(6, 182, 212, 0.5);
+            @apply text-cyan-400; /* 模擬 active h5 */
+        }
+        .chart-toggle-btn.active p {
+            @apply text-cyan-300; /* 模擬 active p */
+        }
+
+
+        /* 其他元件的通用樣式 (Chart Containers, Tables, etc.) */
+        .card { @apply bg-gray-900/70 p-6 rounded-xl shadow-2xl border border-gray-800 transition-transform duration-300; }
+        .analysis-card { @apply bg-gray-900 p-6 rounded-xl shadow-lg border-l-4 border-gray-700 transition-shadow duration-300 hover:shadow-cyan-700/30; }
+        .challenge { @apply border-l-4 border-red-500; }
+        .learning { @apply border-l-4 border-green-500; }
+        .chart-container { 
+            position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 400px; max-height: 480px;
+            background-color: #FFFFFF; padding: 24px; border-radius: 12px; box-shadow: 0 0 25px rgba(6, 182, 212, 0.2); 
+        }
+        /* 區塊分隔線 */
+        .section-divider { @apply w-full h-1 bg-gradient-to-r from-transparent via-cyan-600 to-transparent my-16 opacity-50; }
+        /* 時間軸樣式 */
+        .timeline-item { @apply relative pl-8 pb-8; }
+        .timeline-item:before { content: ''; @apply absolute left-0 top-0 h-full w-0.5 bg-gray-700; }
+        .timeline-item:last-child:before { height: 50%; }
+        .timeline-dot { 
+            @apply absolute left-[-6px] top-0 w-3 h-3 rounded-full bg-cyan-400 border-2 border-cyan-800;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+        }
+
+        /* Super Table Styles */
+        .super-table-container { @apply card bg-gray-900 border-cyan-700/50 p-0 overflow-x-auto border-2 rounded-xl; box-shadow: 0 0 10px rgba(6, 182, 212, 0.1); }
+        .super-table { @apply w-full text-sm mt-4 border-collapse; min-width: 900px; }
+        .super-table th, .super-table td { @apply p-4 text-sm border-l border-r border-gray-700 align-top leading-relaxed; }
+        .super-table tr:not(:last-child) { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        .super-table th { @apply text-cyan-400 text-left font-extrabold bg-gray-800 border-b-2 border-cyan-600/70; }
+        .super-table .category-header { @apply bg-gray-800 text-cyan-300 font-bold text-base text-center border-t border-b border-gray-600; }
+        .super-table .feature-title { @apply font-semibold text-gray-200; }
+        .super-table .traditional-data { @apply font-normal text-gray-400; }
+        .super-table .sofi-optimization { @apply font-bold text-green-400; }
+        .super-table tr:hover { @apply bg-gray-800/50; }
+        
+        /* KPI Cards */
+        .kpi-card { @apply bg-gray-900 p-6 rounded-xl border border-cyan-800 shadow-xl; }
+        .kpi-value { @apply text-4xl font-black text-cyan-400; }
+        .kpi-label { @apply text-gray-400 mt-2; }
     </style>
 </head>
 <body>
 
-    <header class="bg-gray-800 shadow-xl sticky top-0 z-50 w-full border-b border-cyan-700">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-center items-center h-16 space-x-2 sm:space-x-4 md:space-x-6">
-                <a href="#sofi-model" class="nav-link active">1. 模式與技術</a>
-                <a href="#taiwan-learnings" class="nav-link">2. 台灣可借鑑</a>
-                <a href="#taiwan-challenges" class="nav-link">3. 結構性挑戰</a>
-                <a href="#performance-data" class="nav-link">4. 數據佐證</a>
-                <a href="#future-trends" class="nav-link">5. 總結展望</a>
+    <header class="bg-gray-900 shadow-2xl sticky top-0 z-50 w-full border-b border-cyan-700">
+        <!-- 手機友善導航列：允許水平滾動 -->
+        <nav class="mx-auto px-2 sm:px-6 lg:px-8 overflow-x-auto">
+            <div class="flex justify-start sm:justify-center items-center h-16 space-x-2 sm:space-x-4 md:space-x-6 min-w-max">
+                <a href="#sofi-model" class="nav-link active">1. 戰略護城河</a>
+                <a href="#taiwan-learnings" class="nav-link">2. 台灣戰略啟示</a>
+                <a href="#taiwan-challenges" class="nav-link">3. 內部包袱與挑戰</a>
+                <a href="#performance-data" class="nav-link">4. 財務與營運分析</a>
+                <a href="#future-trends" class="nav-link">5. 未來威脅與藍圖</a>
             </div>
         </nav>
     </header>
 
-    <main class="py-16">
-        <section id="sofi-model" class="px-4">
+    <main class="py-12 sm:py-24">
+        <!-- 區塊 1: 模式與技術 (靠左對齊) -->
+        <section id="sofi-model" class="px-4 left-aligned-content">
             <div class="max-w-7xl mx-auto">
-                <h2 class="section-title">1. SoFi 模式與科技中台解析</h2>
-                <p class="section-intro">
-                    SoFi 的成功不僅是金融服務的數位化，更是透過 <span class="text-cyan-400 font-bold">FSPL 循環</span>和<span class="text-cyan-400 font-bold">核心技術平台</span>的深度整合，實現了傳統銀行無法比擬的營運效率和用戶價值。
+                <!-- H2: Section Title - 靠左對齊 -->
+                <h2 class="section-title">1. SoFi 戰略護城河分析</h2>
+                <!-- 已修正 Markdown -->
+                <p class="section-intro max-w-full mx-0 text-left">
+                    從總經理視角，SoFi 的成功<span class="highlight">不是</span>一個 App，而是透過<span class="highlight">「銀行牌照」</span>與<span class="highlight">「SaaS 技術中台」</span>建立的雙重護城河，以此驅動 FSPL 循環，實現了傳統銀行無法比擬的 P&L 優勢。
                 </p>
 
-                <h3 class="text-3xl font-bold text-center text-gray-200 mb-10 mt-16">核心技術特殊之處：實例對比優化</h3>
+                <!-- H3: 新增 - 公司背景與發展歷程 -->
+                <!-- 已修正 Markdown -->
+                <h3 class="sub-section-title text-center">發展歷程：從 FinTech 到 Bank</h3>
+                <div class="max-w-4xl mx-auto p-4 md:p-8 bg-gray-900/70 rounded-xl border border-gray-700 mb-16">
+                    <div class="space-y-6">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold text-cyan-400">2011 - 創立 (高價值客群入口)</h4>
+                            <p class="text-gray-400 text-sm">以<span class="highlight">學生貸款再融資</span>切入，鎖定高學歷、高潛力 (未來高收入) 客群，避開紅海市場。</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold text-cyan-400">2020 - 收購 Galileo (SaaS 護城河)</h4>
+                            <p class="text-gray-400 text-sm">收購技術平台 Galileo，建立<span class="highlight">高毛利的非利息收入 (B2B SaaS)</span> 來源，平衡信用風險。</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold text-cyan-400">2022 - 獲得銀行牌照 (資金護城河)</h4>
+                            <p class="text-gray-400 text-sm"><span class="highlight">戰略轉捩點</span>。從依賴昂貴的批發市場融資，轉變為使用<span class="highlight">極低成本的會員存款</span>作為放貸資金。這直接導致淨利息差 (NIM) 暴增，建立起傳統銀行難以企及的成本優勢。</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- H3: Sub-Section Title - 靠左對齊 -->
+                <h3 class="sub-section-title">核心護城河：NIM 與 SaaS 收入</h3>
                 
-                <!-- 單一總結表格容器 --><div class="super-table-container">
+                <!-- 單一總結表格容器 (靠左對齊的內容) -->
+                <div class="super-table-container max-w-6xl mx-auto mb-16">
                     <table class="super-table">
                         <thead>
                             <tr>
-                                <th class="w-1/4">核心技術支柱</th>
-                                <th class="w-1/4">情境/比較點</th>
-                                <th class="w-1/4">傳統金融機構</th>
-                                <th class="w-1/4 bg-cyan-900/50">SoFi 模式/優化成果</th>
+                                <th class="w-1/4">戰略支柱</th>
+                                <th class="w-1/4">關鍵指標 (KPI)</th>
+                                <th class="w-1/4">傳統銀行 / FinTech</th>
+                                <th class="w-1/4 bg-cyan-900/50">SoFi 模式（P&L 影響）</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- 技術中台：Galileo 平台 --><tr>
-                                <td rowspan="2" class="category-header border-l-4 border-cyan-400">⚡ 技術中台 (Galileo)</td>
-                                <td class="feature-title">新產品上市時間 (聯名卡為例)</td>
-                                <td class="traditional-data">12–18 個月 (核心系統複雜整合)</td>
-                                <td class="sofi-optimization">3–6 個月 (基於 API 快速呼叫與部署)</td>
-                            </tr>
+                            <!-- 護城河 1: 銀行牌照 -->
                             <tr>
-                                <td class="feature-title">技術依賴性與風險</td>
-                                <td class="traditional-data">高度依賴外部供應商/舊系統</td>
-                                <td class="sofi-optimization">內部掌握技術資產，降低成本和供應鏈風險</td>
-                            </tr>
-                            
-                            <!-- AI 驅動的數據風控 --><tr>
-                                <td rowspan="3" class="category-header border-l-4 border-purple-400">🧠 AI 驅動的數據風控</td>
-                                <td class="feature-title">信用評估主要依據</td>
-                                <td class="traditional-data">主要依據 FICO 評分 (靜態、歷史數據)</td>
-                                <td class="sofi-optimization">多維度數據 (儲蓄/消費/投資行為)</td>
-                            </tr>
-                            <tr>
-                                <td class="feature-title">貸款審核速度</td>
-                                <td class="traditional-data">3–5 個工作日 (人工複核)</td>
-                                <td class="sofi-optimization">幾分鐘內 (針對預核准會員，高度自動化)</td>
-                            </tr>
-                            <tr>
-                                <td class="feature-title">個人貸款違約率</td>
-                                <td class="traditional-data">業界平均水平</td>
-                                <td class="sofi-optimization">低於業界平均 (2.83% 降至 2.60%)</td>
-                            </tr>
-
-                            <!-- 自有銀行牌照與資金優勢 --><tr>
-                                <td rowspan="2" class="category-header border-l-4 border-yellow-400">🏦 自有銀行牌照與資金</td>
-                                <td class="feature-title">貸款資金主要來源</td>
-                                <td class="traditional-data">批發市場借貸 (高成本，受市場波動影響)</td>
-                                <td class="sofi-optimization">會員存款 (低成本、穩定、內生性資金)</td>
+                                <td rowspan="2" class="category-header border-l-4 border-yellow-400">🏦 護城河 (一)：銀行牌照</td>
+                                <td class="feature-title">資金成本 (Cost of Funds)</td>
+                                <td class="traditional-data">高 (依賴批發市場融資或昂貴的定存)</td>
+                                <td class="sofi-optimization">極低 (90% 來自會員活存/支存)</td>
                             </tr>
                             <tr>
                                 <td class="feature-title">淨利息差 (NIM)</td>
-                                <td class="traditional-data">受資金成本擠壓，利潤空間有限</td>
-                                <td class="sofi-optimization">NIM 穩定且能持續增長 (通過低成本存款優勢)</td>
+                                <td class="traditional-data">受壓縮且缺乏彈性</td>
+                                <td class="sofi-optimization">高且穩定增長 (低成本資金帶來巨大獲利空間)</td>
+                            </tr>
+                            
+                            <!-- 護城河 2: 技術中台 -->
+                            <tr>
+                                <td rowspan="2" class="category-header border-l-4 border-cyan-400">⚡ 護城河 (二)：技術中台 (Galileo)</td>
+                                <td class="feature-title">收入結構</td>
+                                <td class="traditional-data">高度依賴利息收入 (受信用週期影響)</td>
+                                <td class="sofi-optimization">混合型 (利息 + 高毛利的 SaaS 訂閱收入)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-title">營運效率 (Efficiency Ratio)</td>
+                                <td class="traditional-data">高 (受分行、IT 舊系統拖累)</td>
+                                <td class="sofi-optimization">極低 (單一技術平台，高度自動化)</td>
+                            </tr>
+
+                            <!-- 護城河 3: AI 風控 -->
+                            <tr>
+                                <td rowspan="2" class="category-header border-l-4 border-purple-400">🧠 護城河 (三)：AI 驅動風控</td>
+                                <td class="feature-title">信用評估模型</td>
+                                <td class="traditional-data">靜態 (FICO 評分, 歷史聯徵)</td>
+                                <td class="sofi-optimization">動態 (即時現金流, 消費/投資行為)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-title">違約率 (Default Rate)</td>
+                                <td class="traditional-data">業界平均水平</td>
+                                <td class="sofi-optimization">持續低於業界平均 (精準篩選優質客戶)</td>
                             </tr>
                         </tbody>
                     </table>
+                    <p class="text-center text-gray-500 text-xs py-2 px-4 italic lg:hidden">← 在手機上可向左/右滑動表格以查看完整內容 →</p>
                 </div>
 
-                <h3 class="text-3xl font-bold text-center text-gray-200 mb-8 mt-16">金融服務生產力循環 (FSPL)</h3>
-                <p class="text-center text-gray-400 max-w-4xl mx-auto mb-8">FSPL 是 SoFi 的核心策略。請點擊下方的步驟標題，了解每個環節如何協同作用。</p>
+                <!-- H3: Sub-Section Title - 靠左對齊 -->
+                <h3 class="sub-section-title">FSPL (金融服務生產力循環) - 盈利模式</h3>
+                <p class="text-left text-gray-400 max-w-4xl mb-6 sm:mb-8">FSPL 是 SoFi <span class="highlight">執行</span>其護城河的戰術。請點擊流程圖中的任一步驟，了解其如何運作。</p>
 
-                <!-- 靜態流程圖 (僅展示，無點擊事件) --><div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
-                    <div class="w-full md:w-56 p-4 text-center bg-gray-700/50 rounded-xl border border-cyan-800">
-                        <h5 class="font-black text-cyan-400 text-lg">1. 低成本獲客</h5>
-                        <p class="text-xs text-gray-400">以銀行帳戶為起點</p>
+                <!-- 流程圖 (可點擊) -->
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-4 max-w-6xl mx-auto fspl-diagram-container">
+                    
+                    <!-- 步驟 1 (初始 Active 狀態) -->
+                    <div id="step-1" data-step="fspl-1" class="fspl-step active">
+                        <h5>1. 低成本獲客</h5>
+                        <p>以銀行帳戶為起點</p>
                     </div>
-                    <div class="text-3xl text-cyan-600 hidden md:block mx-2">→</div>
-                    <div class="w-full md:w-56 p-4 text-center bg-gray-700/50 rounded-xl border border-cyan-800">
-                        <h5 class="font-black text-cyan-400 text-lg">2. 交叉銷售與數據採集</h5>
-                        <p class="text-xs text-gray-400">AI 推薦高利潤產品</p>
+                    <div class="text-3xl text-gray-500 hidden md:block mx-2">→</div>
+                    <div class="text-3xl text-gray-500 block md:hidden transform rotate-90">→</div>
+
+                    <!-- 步驟 2 -->
+                    <div id="step-2" data-step="fspl-2" class="fspl-step">
+                        <h5>2. 交叉銷售與數據採集</h5>
+                        <p>AI 推薦高利潤產品</p>
                     </div>
-                    <div class="text-3xl text-cyan-600 hidden md:block mx-2">→</div>
-                    <div class="w-full md:w-56 p-4 text-center bg-gray-700/50 rounded-xl border border-cyan-800">
-                        <h5 class="font-black text-cyan-400 text-lg">3. 黏著度與 LTV 提升</h5>
-                        <p class="text-xs text-gray-400">多產品提升忠誠度</p>
+                    <div class="text-3xl text-gray-500 hidden md:block mx-2">→</div>
+                    <div class="text-3xl text-gray-500 block md:hidden transform rotate-90">→</div>
+
+                    <!-- 步驟 3 -->
+                    <div id="step-3" data-step="fspl-3" class="fspl-step">
+                        <h5>3. 黏著度與 LTV 提升</h5>
+                        <p>多產品提升忠誠度</p>
                     </div>
-                    <div class="text-3xl text-cyan-600 hidden md:block mx-2">→</div>
-                    <div class="w-full md:w-56 p-4 text-center bg-gray-700/50 rounded-xl border border-cyan-800">
-                        <h5 class="font-black text-cyan-400 text-lg">4. 增強風控與平台優化</h5>
-                        <p class="text-xs text-gray-400">數據反饋閉環</p>
+                    <div class="text-3xl text-gray-500 hidden md:block mx-2">→</div>
+                    <div class="text-3xl text-gray-500 block md:hidden transform rotate-90">→</div>
+
+                    <!-- 步驟 4 -->
+                    <div id="step-4" data-step="fspl-4" class="fspl-step">
+                        <h5>4. 增強風控與平台優化</h5>
+                        <p>數據反饋閉環</p>
                     </div>
                 </div>
                 
-                <!-- Tab 選項卡 (用於點擊互動) --><div class="flex flex-wrap justify-center gap-2 mb-8">
-                    <button id="fspl-tab-1" data-step="fspl-1" class="fspl-tab-btn active">步驟 1: 獲客</button>
-                    <button id="fspl-tab-2" data-step="fspl-2" class="fspl-tab-btn">步驟 2: 交叉銷售</button>
-                    <button id="fspl-tab-3" data-step="fspl-3" class="fspl-tab-btn">步驟 3: 提升 LTV</button>
-                    <button id="fspl-tab-4" data-step="fspl-4" class="fspl-tab-btn">步驟 4: 數據回饋</button>
+                <div id="fspl-details" class="card p-6 min-h-[150px] max-w-4xl mx-auto border-cyan-600 mb-16">
+                    <!-- 內容將由 JS 填充 -->
                 </div>
 
-                <div id="fspl-details" class="card p-6 min-h-[150px] max-w-4xl mx-auto border-cyan-600">
-                    <!-- 內容將由 JS 填充 --></div>
-            </div>
-        </section>
+                <!-- 單元經濟學分析 -->
+                <h3 class="sub-section-title">FSPL 的單元經濟學 (Unit Economics)</h3>
+                <p class="text-left text-gray-400 max-w-4xl mb-10">FSPL 的核心價值在於創造 <span class="font-bold text-green-400">高 LTV / 低 CAC</span> 的槓桿效益。以下數據闡述了其經濟效益的關鍵指標。</p>
 
-        <section id="taiwan-learnings" class="py-20 px-4">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="section-title">2. 對台灣金融業的啟示 (可借鏡之處)</h2>
-                <p class="section-intro">
-                    SoFi 的 FSPL 模式為台灣高度競爭的金融市場提供了寶貴的戰略方向。核心在於如何將現有的數位客戶轉化為高價值的數據資產，並透過技術提升營運效率。
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="analysis-card learning">
-                        <h4 class="text-2xl font-bold mb-3 text-green-400">啟示一：數據資產化與 FSPL 思維</h4>
-                        <p class="text-gray-400">台灣銀行應將數位帳戶視為<span class="font-bold">數據採集核心</span>，而非僅是存款工具。運用非聯徵數據（如交易行為、現金流）優化客戶分群與交叉銷售模型，這是提升 LTV 和降低獲客成本的關鍵。</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16 text-center">
+                    <div class="kpi-card">
+                        <div class="text-xl font-bold text-gray-200">LTV:CAC 關係</div>
+                        <div class="kpi-value mt-3 text-green-400">~1:5</div>
+                        <p class="text-xs text-gray-500 mt-2">（行業平均約 1:3，顯示極高的效益）</p>
                     </div>
-                    <div class="analysis-card learning">
-                        <h4 class="text-2xl font-bold mb-3 text-green-400">啟示二：AI 驅動的風控升級</h4>
-                        <p class="text-gray-400">借鏡 SoFi 的 AI 風控，台灣金融機構需建立更精準的<span class="font-bold">行為信用模型</span>，突破傳統聯徵數據的局限。這能為優質客戶提供更優的信貸條件，同時實現更快的線上審核速度。</p>
+                    <div class="kpi-card">
+                        <div class="text-xl font-bold text-gray-200">交叉銷售的產品採用率</div>
+                        <div class="kpi-value mt-3">40%+</div>
+                        <p class="text-xs text-gray-500 mt-2">（大幅降低邊際獲客成本）</p>
                     </div>
-                    <div class="analysis-card learning">
-                        <h4 class="text-2xl font-bold mb-3 text-green-400">啟示三：技術中台與模組化</h4>
-                        <p class="text-gray-400">面對市場快速變化，台灣銀行業應加速核心系統的<span class="font-bold">模組化與 API 接口化</span>。這能顯著縮短新產品或跨部門服務整合的上市時間，將技術部門從成本中心轉向戰略賦能中心。</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="taiwan-challenges" class="py-20 px-4">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="section-title">3. 台灣市場的結構性挑戰 (不可行之處)</h2>
-                <p class="section-intro">
-                    SoFi 模式並不能全盤複製。台灣獨特的監管環境和市場結構，為金融創新帶來了根本性的挑戰。
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="analysis-card challenge">
-                        <h4 class="text-2xl font-bold mb-3 text-red-500">挑戰一：嚴格的監管與跨業壁壘</h4>
-                        <p class="text-gray-400">台灣對於銀行、證券、保險等業務的區隔嚴格，難以像 SoFi 一樣在單一平台下提供全方位的金融產品。數據在跨部門、跨業務的串聯和應用上，仍面臨法規限制，形成<span class="font-bold">數據孤島</span>。</p>
-                    </div>
-                    <div class="analysis-card challenge">
-                        <h4 class="text-2xl font-bold mb-3 text-red-500">挑戰二：市場規模限制與規模效益</h4>
-                        <p class="text-gray-400">台灣市場總體規模較小，即使成功建立 FSPL，其交叉銷售和客戶生命週期價值 (LTV) 也難以達到 SoFi 在美國市場數千萬會員所實現的<span class="font-bold">規模化回報</span>。</p>
-                    </div>
-                    <div class="analysis-card challenge">
-                        <h4 class="text-2xl font-bold mb-3 text-red-500">挑戰三：核心產品基礎的缺失</h4>
-                        <p class="text-gray-400">SoFi 的高利潤起家業務——學生貸款再融資——在台灣缺乏市場化空間，因為台灣學貸多由政府主導。這使得台灣金融機構缺少了一個用來獲取優質、高潛力年輕客群的<span class="font-bold">高價值產品入口</span>。</p>
+                    <div class="kpi-card">
+                        <div class="text-xl font-bold text-gray-200">40 法則得分 (科技公司標準)</div>
+                        <div class="kpi-value mt-3">67%</div>
+                        <p class="text-xs text-gray-500 mt-2">（收入增長與調整後 EBITDA 利潤率之和，體現高成長與高效率）</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <section id="performance-data" class="py-20 px-4">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="section-title">4. 數據佐證：SoFi 增長動能</h2>
-                <p class="section-intro">
-                    SoFi 的戰略成功與否，最終反映在其營運數據上。以下圖表展示了其增長動能與收入結構，這是其 FSPL 模式成效的直接證明。
+        <!-- 分隔線 1 -->
+        <hr class="section-divider">
+
+        <!-- 區塊 2: 台灣可借鑑 (靠左對齊) -->
+        <section id="taiwan-learnings" class="py-10 sm:py-20 px-4 left-aligned-content">
+            <div class="max-w-7xl mx-auto">
+                <!-- H2: Section Title - 靠左對齊 -->
+                <h2 class="section-title">2. 對台灣金融業的戰略啟示</h2>
+                <!-- 已修正 Markdown -->
+                <p class="section-intro max-w-full mx-0 text-left">
+                    台灣的威脅<span class="highlight">不是</span> SoFi 會進來，而是<span class="highlight">「SoFi 模式」</span>已被本土數位銀行（如 LINE Bank, Rakuten Bank）採用。我們必須正視「利差壓縮」的威脅並立即行動。
                 </p>
-
-                <div class="flex justify-center space-x-4 mb-8">
-                    <button id="show-member-chart" class="chart-toggle-btn active bg-cyan-600 text-white shadow-lg shadow-cyan-400/50">會員增長趨勢</button>
-                    <button id="show-revenue-chart" class="chart-toggle-btn bg-gray-700 text-gray-300">收入結構分析</button>
-                </div>
-
-                <div id="member-chart-container" class="chart-container">
-                    <canvas id="memberChart"></canvas>
-                </div>
-
-                <div id="revenue-chart-container" class="chart-container hidden">
-                    <canvas id="revenueChart"></canvas>
+                <!-- 卡片 (靠左對齊的內容) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+                    <div class="analysis-card learning">
+                        <!-- H4: Card Title - 第三階層 -->
+                        <h4 class="card-title text-green-400">啟示一：加速核心系統現代化</h4>
+                        <p class="text-gray-400">我們必須停止在舊核心系統上疊床架屋。必須投入資源進行<span class="highlight">IT 基礎設施的微服務化和 API 化</span>，否則我們的新產品上市時間永遠無法與 FinTech 競爭，營運成本也將居高不下。</p>
+                    </div>
+                    <div class="analysis-card learning">
+                        <!-- H4: Card Title - 第三階層 -->
+                        <h4 class="card-title text-green-400">啟示二：建立「金控級」數據中台</h4>
+                        <p class="text-gray-400">立即打破銀行、證券、壽險間的數據孤島。我們必須建立一個<span class="highlight">金控統一的數據中台 (Data Lakehouse)</span>，合法合規地整合客戶行為數據，否則我們的 AI 風控和交叉銷售將永遠停留在表面。</p>
+                    </div>
+                    <div class="analysis-card learning">
+                        <!-- H4: Card Title - 第三階層 -->
+                        <h4 class="card-title text-green-400">啟示三：重估數位銀行的角色</h4>
+                        <p class="text-gray-400">數位帳戶<span class="highlight">不是</span>存款工具，而是<span class="highlight">低成本獲客和數據採集的「入口」</span>。我們必須改變 KPI，不再只看存款餘額，而是看交叉銷售率、LTV 和非利息收入的貢獻。</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="future-trends" class="py-20 px-4">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="section-title">5. 總結與未來趨勢</h2>
-                <p class="section-intro">
-                    SoFi 正積極佈局 AI 與區塊鏈，預示著金融科技的下一波浪潮。這是台灣金融業必須提前佈局的領域。
+        <!-- 分隔線 2 -->
+        <hr class="section-divider">
+
+        <!-- 區塊 3: 結構性挑戰 (靠左對齊) -->
+        <section id="taiwan-challenges" class="py-10 sm:py-20 px-4 left-aligned-content">
+            <div class="max-w-7xl mx-auto">
+                <!-- H2: Section Title - 靠左對齊 -->
+                <h2 class="section-title">3. 我們的內部包袱與挑戰</h2>
+                <p class="section-intro max-w-full mx-0 text-left">
+                    SoFi 模式的成功在於它沒有歷史包袱。我們必須誠實面對自身在法規之外的真正挑戰：僵化的組織和過時的技術。
+                </p>
+                <!-- 卡片 (靠左對齊的內容) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+                    <div class="analysis-card challenge">
+                        <!-- H4: Card Title - 第三階層 -->
+                        <h4 class="card-title text-red-500">挑戰一：IT 核心系統僵化</h4>
+                        <p class="text-gray-400">我們龐大而陳舊的 IT 核心系統是最大的技術債。任何新產品的開發都需耗時 12-18 個月，而 SoFi 僅需 3-6 個月。這導致我們在市場反應速度上已處於絕對劣勢。</p>
+                    </div>
+                    <div class="analysis-card challenge">
+                        <!-- H4: Card Title - 第三階層 -->
+                        <h4 class="card-title text-red-500">挑戰二：實體分行的成本拖累</h4>
+                        <p class="text-gray-400">SoFi 沒有實體分行，其營運效率極高。而我們龐大的分行網絡和人事成本，導致我們的營運成本遠高於數位銀行，在未來的價格戰和利差壓縮中將非常被動。</p>
+                    </div>
+                    <div class="analysis-card challenge">
+                        <!-- H4: Card Title - 第三階層 -->
+                        <h4 class="card-title text-red-500">挑戰三：金控內部的數據孤島</h4>
+                        <p class="text-gray-400">即使法規允許，金控內各子公司（銀行、證券、壽險）仍常各自為政。缺乏統一的數據治理和共享機制，使得 FSPL 模式在金控內部難以真正落地，無法發揮生態系的最大價值。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 分隔線 3 -->
+        <hr class="section-divider">
+
+        <!-- 區塊 4: 數據佐證 (靠左對齊) -->
+        <section id="performance-data" class="py-10 sm:py-20 px-4 left-aligned-content">
+            <div class="max-w-7xl mx-auto">
+                <!-- H2: Section Title - 靠左對齊 -->
+                <h2 class="section-title">4. 深度財務與營運分析</h2>
+                <p class="section-intro max-w-full mx-0 text-left">
+                    SoFi 的增長動能源於其高效的會員結構和成功的交叉銷售。數據證明了其 FSPL 模式在提升客戶價值和收入穩定性上的成效。
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                    <div class="card flex items-start space-x-6 border-cyan-500 hover:scale-[1.02] cursor-default">
-                        <span class="text-4xl pt-1 text-cyan-400">🤖</span>
-                        <div>
-                            <h3 class="text-2xl font-semibold text-cyan-400">AI 驅動的自動化與優化</h3>
-                            <p class="text-gray-400">利用 AI 和大數據持續優化 FSPL 循環，包括更精準的信用風險評估、個性化的產品推薦，以及自動化的客戶服務，以進一步降低成本並提升用戶體驗。</p>
-                        </div>
+                <!-- H3: 新增 - 客戶結構與產品採用深度 -->
+                <h3 class="sub-section-title !mt-4">客戶結構與產品採用深度</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 max-w-6xl mx-auto text-center">
+                    <div class="kpi-card">
+                        <div class="text-xl font-bold text-gray-200">客戶價值核心</div>
+                        <div class="kpi-value mt-3 text-green-400">高學歷/高收入</div>
+                        <p class="text-xs text-gray-500 mt-2">（最初通過學生貸款篩選出的優質客群）</p>
                     </div>
+                    <div class="kpi-card">
+                        <div class="text-xl font-bold text-gray-200">交叉銷售深度</div>
+                        <div class="kpi-value mt-3">1.5+</div>
+                        <p class="text-xs text-gray-500 mt-2">（平均每位會員採用產品數量）</p>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="text-xl font-bold text-gray-200">存款結構優勢</div>
+                        <div class="kpi-value mt-3">90% +</div>
+                        <p class="text-xs text-gray-500 mt-2">（來自會員的低成本存款）</p>
+                    </div>
+                </div>
+
+                <!-- 圖表切換區 -->
+                <h3 class="sub-section-title">核心增長數據與產品採用</h3>
+                
+                <!-- 已修正為置中，並採用 FSPL 步驟樣式 -->
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-12 max-w-6xl mx-auto">
+                    <button id="show-member-chart" class="chart-toggle-btn active">會員總數趨勢</button>
+                    <button id="show-revenue-chart" class="chart-toggle-btn">
+                        收入結構分析
+                        <p>(NII vs Non-NII)</p>
+                    </button>
+                    <button id="show-product-adoption-chart" class="chart-toggle-btn">
+                        產品採用率
+                        <p>(FSPL 成效)</p>
+                    </button>
+                </div>
+
+                <!-- 圖表容器 -->
+                <div id="member-chart-container" class="chart-container">
+                    <canvas id="memberChart"></canvas>
+                </div>
+                <div id="revenue-chart-container" class="chart-container hidden">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div id="product-adoption-chart-container" class="chart-container hidden">
+                    <canvas id="productAdoptionChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 分隔線 4 -->
+        <hr class="section-divider">
+
+        <!-- 區塊 5: 總結與未來趨勢 (靠左對齊) -->
+        <section id="future-trends" class="py-10 sm:py-20 px-4 left-aligned-content">
+            <div class="max-w-7xl mx-auto">
+                <!-- H2: Section Title - 靠左對齊 -->
+                <h2 class="section-title">5. 未來威脅與戰略藍圖</h2>
+                <p class="section-intro max-w-full mx-0 text-left">
+                    SoFi 的未來增長不單依賴貸款，而是透過三大引擎驅動：技術平台全球化、AI 模型的深度整合，以及區塊鏈結算層面的創新。這是台灣金融業在預測未來競爭格局時，必須關注的重點。
+                </p>
+
+                <!-- 戰略藍圖卡片群組 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 max-w-6xl mx-auto">
                     <div class="card flex items-start space-x-6 border-cyan-500 hover:scale-[1.02] cursor-default">
                         <span class="text-4xl pt-1 text-cyan-400">🔗</span>
                         <div>
-                            <h3 class="text-2xl font-semibold text-cyan-400">區塊鏈與結算創新</h3>
-                            <p class="text-gray-400">SoFi 計劃推出自己的穩定幣 (SoFi USD) 並利用區塊鏈技術支援支付和結算。這預示著金融服務將從應用層創新，轉向底層結算效率的革命。</p>
+                            <!-- H3/H4: Card Title - 第三階層 -->
+                            <h3 class="card-title text-cyan-400">戰略引擎 1: 技術平台全球化 (Galileo)</h3>
+                            <p class="text-gray-400 text-base"><span class="font-bold">目標：</span> 將核心技術 Galileo 輸出至國際市場，成為全球金融服務的底層建設提供者。這不僅分散了單一國家監管風險，也將技術收入轉變為高毛利、穩定增長的 SaaS 收入。</p>
+                        </div>
+                    </div>
+                    <div class="card flex items-start space-x-6 border-cyan-500 hover:scale-[1.02] cursor-default">
+                        <span class="text-4xl pt-1 text-cyan-400">🤖</span>
+                        <div>
+                            <!-- H3/H4: Card Title - 第三階層 -->
+                            <h3 class="card-title text-cyan-400">戰略引擎 2: AI 驅動的自動化與決策閉環</h3>
+                            <p class="text-gray-400 text-base"><span class="font-bold">目標：</span> 實現 AI 在所有業務流程的深度整合，從客戶體驗、產品推薦到營運自動化。這將進一步壓縮營運成本，並透過機器學習持續優化貸款定價，極大化淨利息差 (NIM)。</p>
+                        </div>
+                    </div>
+                    <div class="card flex items-start space-x-6 border-cyan-500 hover:scale-[1.02] cursor-default md:col-span-2">
+                        <span class="text-4xl pt-1 text-cyan-400">💰</span>
+                        <div>
+                            <!-- H3/H4: Card Title - 第三階層 -->
+                            <h3 class="card-title text-cyan-400">戰略引擎 3: 區塊鏈與新支付結算</h3>
+                            <p class="text-gray-400 text-base"><span class="font-bold">目標：</span> 透過發行穩定幣 (如 SoFi USD) 和利用區塊鏈技術，進入下一代支付和結算領域。這將允許 SoFi 跳過傳統的銀行間支付網絡，實現更快、更便宜的資金移動，進一步鞏固其在 FinTech 領域的先發優勢。</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="card mt-16 bg-cyan-700 text-white p-10 hover:shadow-cyan-400/70 hover:shadow-2xl transition-shadow duration-300">
-                    <h3 class="text-3xl font-black mb-4 text-center">核心啟示：轉向「生態系價值」</h3>
-                    <p class="text-center text-cyan-100 max-w-4xl mx-auto text-lg">
-                        台灣金融業的最大挑戰是如何在<span class="font-bold">數據和技術</span>上實現突破，將<span class="font-bold">單次交易客戶</span>轉變為<span class="font-bold">數據資產會員</span>。在監管限制下，提升技術中台的彈性和數據應用深度，是追趕全球 FinTech 浪潮的唯一途徑。
+                <!-- 已修正 Markdown -->
+                <div class="card mt-16 bg-cyan-700 text-white p-6 sm:p-10 hover:shadow-cyan-400/70 hover:shadow-2xl transition-shadow duration-300 max-w-5xl mx-auto text-center">
+                    <!-- H3: Conclusion Title - 調整為最合適的尺寸，置中 -->
+                    <h3 class="conclusion-title text-white !mt-0 !mb-4">深刻洞見：台灣金融業的行動</h3>
+                    <p class="conclusion-text text-cyan-100 max-w-4xl mx-auto">
+                        SoFi 的案例揭示了金融業的未來威脅與機遇。台灣金融機構必須停止將數位轉型視為 IT 專案，而是<span class="highlight">攸關 P&L 的核心戰略</span>。立即成立跨部門專案組，以<span class="highlight">「建立金控數據中台」</span>與<span class="highlight">「核心系統 API 化」</span>為最優先級目標，方能在未來的利差壓縮戰中保持競爭優勢。
                     </p>
                 </div>
 
@@ -336,21 +512,48 @@
     </main>
 
     <footer class="text-center p-6 bg-gray-900 text-gray-500 mt-16">
-        <p>&copy; 2025 SoFi 模式對台灣金融業的啟示。報告設計：儀表板科技風格。</p>
+        <p class="text-xs sm:text-sm">&copy; 2025 SoFi 戰略深度解析 (台灣金融業洞見)。</p>
     </footer>
 
+    <!-- JavaScript 腳本區域 (包含所有數據和互動邏輯) -->
     <script>
         const slideData = {
             memberLabels: ['2024 Q4', '2025 Q1', '2025 Q2', '2025 Q3'],
             memberData: [9.4, 10.1, 11.7, 12.6],
-            revenueLabels: ['貸款 (利息收入, 57%)', '金融服務 (手續費, 30%)', '技術平台 (服務費, 13%)'],
-            revenueData: [57, 30, 13]
+            revenueLabels: ['淨利息收入 (NII, 57%)', '非利息收入 (Non-NII, 43%)'],
+            revenueData: [57, 43], // 調整以反映 NII 和 Non-NII (SaaS等)
+            adoptionLabels: ['擁有 1 產品', '擁有 2 產品', '擁有 3+ 產品'],
+            adoptionData: [58, 28, 14] 
         };
+
+        // FSPL 步驟內容 (已修正 Markdown)
+        const fsplDetails = {
+            'fspl-1': {
+                title: '1. 低成本獲客：以金融服務為起點 (低 CAC 基礎)',
+                text: '<span class="font-bold">總經理視角：</span> 傳統金融產品（高收益儲蓄、零手續費投資）作為誘餌，極大地降低了初始客戶獲取成本 (CAC)。目標是建立信任關係和獲得<span class="highlight">第一方數據</span>，而非在初期盈利。'
+            },
+            'fspl-2': {
+                title: '2. 交叉銷售與數據採集 (提升邊際效益)',
+                text: '<span class="font-bold">總經理視角：</span> 利用 AI 模型分析存款/交易數據，精確判斷客戶是否為優質信貸潛在用戶。一旦客戶跨越到第二個產品，其<span class="highlight">邊際 CAC 趨近於零</span>，P&L 開始顯現正效益。'
+            },
+            'fspl-3': {
+                title: '3. 黏著度與 LTV 提升 (數據網絡效應)',
+                text: '<span class="font-bold">總經理視角：</span> 每增加一個產品，客戶流失率便會顯著下降，<span class="highlight">客戶終身價值 (LTV) 呈指數級增長</span>。這不僅創造了多重收入流，也讓客戶對平台產生數據鎖定效應，提升了資產的穩定性。'
+            },
+            'fspl-4': {
+                title: '4. 增強風控與平台優化 (NIM 擴張)',
+                text: '<span class="font-bold">總經理視角：</span> 貸款償還數據反饋回 AI 風控模型，不斷優化信用評估精度。這使得 SoFi 能夠向優質會員提供更優利率，同時保持低違約率，實現穩定的<span class="highlight">淨利息差 (NIM) 擴張</span>，完成盈利閉環。'
+            }
+        };
+
+        let memberChartInstance = null;
+        let revenueChartInstance = null;
+        let adoptionChartInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             setupNavigation();
             setupFSPLInteraction();
-            setupCharts();
+            initializeCharts();
             setupChartToggle();
         });
 
@@ -395,96 +598,101 @@
         }
 
         function setupFSPLInteraction() {
-            const tabs = document.querySelectorAll('.fspl-tab-btn');
+            const steps = document.querySelectorAll('.fspl-step');
             const detailsContainer = document.getElementById('fspl-details');
             
             if (!detailsContainer) return;
 
-            const detailsText = {
-                'fspl-1': {
-                    title: '1. 低成本獲客：以金融服務為起點',
-                    text: '<span class="font-bold">流程細節：</span> SoFi 以高收益儲蓄帳戶、零費用投資等服務作為會員獲取的第一步。此階段目標是以遠低於傳統金融機構的成本獲取用戶，並開始蒐集他們的存款、消費、轉帳等<span class="font-bold">即時數據</span>，奠定數據基礎。'
-                },
-                'fspl-2': {
-                    title: '2. 交叉銷售與數據採集：AI 推薦高利潤產品',
-                    text: '<span class="font-bold">流程細節：</span> 系統利用會員累積的數據，結合 AI 演算法，精確判斷其財務需求與信用狀況。然後，透過客製化通知，向會員推廣高利潤產品，例如：個人貸款（獲客成本顯著降低）。'
-                },
-                'fspl-3': {
-                    title: '3. 黏著度與 LTV 提升：多產品增加會員價值',
-                    text: '<span class="font-bold">流程細節：</span> 當會員採用多個產品時，他們對平台的依賴性會指數級增長，流失率大幅下降。這使得 SoFi 從單一產品的收入，轉變為來自多個穩定費用的持續性收入流，極大地提高了客戶的<span class="font-bold">終身價值 (LTV)</span>。'
-                },
-                'fspl-4': {
-                    title: '4. 增強風控與平台優化：數據反饋閉環',
-                    text: '<span class="font-bold">流程細節：</span> 交叉銷售所累積的數據（尤其是貸款償還數據）會被重新投入到 SoFi 的專有風險評估模型中。這些更精確的數據幫助 SoFi 優化對貸款申請人的評估，從而提供更好的利率給優質會員，同時維持健康的違約率。'
-                }
-            };
-
-            function updateTab(tabId) {
-                tabs.forEach(tab => {
-                    tab.classList.remove('active');
-                    tab.classList.remove('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-400/50', 'scale-[1.03]');
-                    tab.classList.add('bg-gray-700', 'text-gray-300');
+            function updateStep(stepElement) {
+                // 1. 移除所有步驟的 active 狀態
+                steps.forEach(step => {
+                    step.classList.remove('active');
+                    // 重置文字顏色：非 Active 狀態為白色/灰色
+                    step.querySelector('h5').classList.remove('text-cyan-400');
+                    step.querySelector('p').classList.remove('text-cyan-300');
                 });
 
-                const activeTab = document.getElementById(tabId);
-                if (activeTab) {
-                    activeTab.classList.add('active');
-                    activeTab.classList.remove('bg-gray-700', 'text-gray-300');
-                    activeTab.classList.add('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-400/50', 'scale-[1.03]');
-                    
-                    const stepId = activeTab.getAttribute('data-step');
-                    const detail = detailsText[stepId];
+                // 2. 設置當前步驟為 active
+                stepElement.classList.add('active');
+                // 設置文字顏色：Active 狀態為亮青色/淺青色
+                stepElement.querySelector('h5').classList.add('text-cyan-400');
+                stepElement.querySelector('p').classList.add('text-cyan-300');
+                
+                // 3. 更新下方細節內容
+                const stepId = stepElement.getAttribute('data-step');
+                const detail = fsplDetails[stepId];
+
+                // 使用淡入效果，提供更平滑的切換體驗
+                detailsContainer.style.opacity = '0';
+                setTimeout(() => {
                     detailsContainer.innerHTML = `
                         <h4 class="text-xl font-bold text-cyan-400 mb-2">${detail.title}</h4>
                         <p class="text-gray-400">${detail.text}</p>
                     `;
-                }
+                    detailsContainer.style.opacity = '1';
+                }, 150);
             }
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    updateTab(tab.id);
+            steps.forEach(step => {
+                step.addEventListener('click', () => {
+                    updateStep(step);
                 });
             });
             
-            // Initial detail load
-            updateTab('fspl-tab-1');
+            // 初始載入第一個步驟
+            if (steps.length > 0) {
+                detailsContainer.style.transition = 'opacity 0.15s ease-in-out';
+                updateStep(steps[0]);
+            }
         }
 
         function setupChartToggle() {
-            const memberBtn = document.getElementById('show-member-chart');
-            const revenueBtn = document.getElementById('show-revenue-chart');
-            const memberContainer = document.getElementById('member-chart-container');
-            const revenueContainer = document.getElementById('revenue-chart-container');
-            const buttons = [memberBtn, revenueBtn];
+            const chartToggleButtons = document.querySelectorAll('.chart-toggle-btn');
+            const chartContainers = [
+                document.getElementById('member-chart-container'),
+                document.getElementById('revenue-chart-container'),
+                document.getElementById('product-adoption-chart-container')
+            ];
 
-            if (!memberBtn || !revenueBtn || !memberContainer || !revenueContainer) return;
+            function switchChart(activeId) {
+                chartContainers.forEach(container => {
+                    if (container) {
+                        container.classList.add('hidden');
+                    }
+                });
+                const activeContainer = document.getElementById(activeId + '-container');
+                if (activeContainer) {
+                    activeContainer.classList.remove('hidden');
+                }
 
-            // Function to manage button classes
-            function updateButtonState(activeBtn, inactiveBtn) {
-                activeBtn.classList.add('active', 'bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-400/50', 'scale-[1.03]');
-                activeBtn.classList.remove('bg-gray-700', 'text-gray-300', 'scale-[1.00]');
-                
-                inactiveBtn.classList.remove('active', 'bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-400/50', 'scale-[1.03]');
-                inactiveBtn.classList.add('bg-gray-700', 'text-gray-300', 'scale-[1.00]');
+                chartToggleButtons.forEach(btn => {
+                    const btnId = btn.id.replace('show-', '');
+                    if (btnId === activeId) {
+                        btn.classList.add('active');
+                        // 確保 Active 狀態的子文字顏色也正確
+                        const subtext = btn.querySelector('p');
+                        if(subtext) subtext.classList.add('text-cyan-300');
+                    } else {
+                        btn.classList.remove('active');
+                        // 確保非 Active 狀態的子文字顏色也正確
+                        const subtext = btn.querySelector('p');
+                        if(subtext) subtext.classList.remove('text-cyan-300');
+                    }
+                });
             }
 
-            memberBtn.addEventListener('click', () => {
-                memberContainer.classList.remove('hidden');
-                revenueContainer.classList.add('hidden');
-                updateButtonState(memberBtn, revenueBtn);
+            chartToggleButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const chartId = btn.id.replace('show-', '');
+                    switchChart(chartId);
+                });
             });
 
-            revenueBtn.addEventListener('click', () => {
-                memberContainer.classList.add('hidden');
-                revenueContainer.classList.remove('hidden');
-                updateButtonState(revenueBtn, memberBtn);
-            });
-            
-            // Initial state set by HTML classes, no need to reset here
+            // 初始顯示
+            switchChart('member-chart');
         }
 
-        function setupCharts() {
+        function initializeCharts() {
             const chartOptions = (type) => ({
                 responsive: true,
                 maintainAspectRatio: false,
@@ -492,7 +700,7 @@
                     legend: {
                         position: type === 'doughnut' ? 'bottom' : 'top',
                         labels: {
-                            color: '#4B5563', // Dark text for chart labels (since chart background is white)
+                            color: '#4B5563', 
                             font: { family: "'Noto Sans TC', sans-serif" }
                         }
                     },
@@ -513,14 +721,27 @@
                         beginAtZero: true,
                         grid: { color: 'rgba(200, 200, 200, 0.2)' }
                     }
+                } : type === 'bar' ? {
+                    x: {
+                        title: { display: true, text: '產品數量', color: '#4B5563', font: { family: "'Noto Sans TC', sans-serif" } },
+                        ticks: { color: '#4B5563', font: { family: "'Noto Sans TC', sans-serif" } },
+                        grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                    },
+                    y: {
+                        title: { display: true, text: '會員比例 (%)', color: '#4B5563', font: { family: "'Noto Sans TC', sans-serif" } },
+                        ticks: { color: '#4B5563', font: { family: "'Noto Sans TC', sans-serif" } },
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                    }
                 } : {}
             });
 
-            // Member Growth Chart
+            // 1. Member Growth Chart
             const memberCtxEl = document.getElementById('memberChart');
             if (memberCtxEl) {
-                const memberCtx = memberCtxEl.getContext('2d');
-                new Chart(memberCtx, {
+                if(window.memberChartInstance) window.memberChartInstance.destroy();
+                window.memberChartInstance = new Chart(memberCtxEl.getContext('2d'), {
                     type: 'line',
                     data: {
                         labels: slideData.memberLabels,
@@ -538,11 +759,11 @@
                 });
             }
 
-            // Revenue Structure Chart
+            // 2. Revenue Structure Chart
             const revenueCtxEl = document.getElementById('revenueChart');
             if (revenueCtxEl) {
-                const revenueCtx = revenueCtxEl.getContext('2d');
-                new Chart(revenueCtx, {
+                if(window.revenueChartInstance) window.revenueChartInstance.destroy();
+                window.revenueChartInstance = new Chart(revenueCtxEl.getContext('2d'), {
                     type: 'doughnut',
                     data: {
                         labels: slideData.revenueLabels,
@@ -550,9 +771,8 @@
                             label: '收入結構',
                             data: slideData.revenueData,
                             backgroundColor: [
-                                'rgb(14, 116, 144)',   // Deep Cyan
-                                'rgb(6, 182, 212)',    // Medium Cyan
-                                'rgb(103, 232, 249)'   // Light Cyan
+                                'rgb(14, 116, 144)',   
+                                'rgb(103, 232, 249)'   
                             ],
                             hoverOffset: 8
                         }]
@@ -578,6 +798,34 @@
                             }
                         }
                     }
+                });
+            }
+
+            // 3. Product Adoption Chart (新增)
+            const adoptionCtxEl = document.getElementById('productAdoptionChart');
+            if (adoptionCtxEl) {
+                if(window.adoptionChartInstance) window.adoptionChartInstance.destroy();
+                window.adoptionChartInstance = new Chart(adoptionCtxEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: slideData.adoptionLabels,
+                        datasets: [{
+                            label: '會員比例 (%)',
+                            data: slideData.adoptionData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)', 
+                                'rgba(54, 162, 235, 0.6)', 
+                                'rgba(6, 182, 212, 0.9)'  
+                            ],
+                            borderColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(6, 182, 212)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: chartOptions('bar')
                 });
             }
         }
